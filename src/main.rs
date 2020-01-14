@@ -1,6 +1,6 @@
-use calamine::{Reader, Xlsx, open_workbook};
+use calamine::{open_workbook, Reader, Xlsx};
 
-use clap::{Arg, App};
+use clap::{App, Arg};
 
 use std::fs::File;
 use std::io::Write;
@@ -10,15 +10,19 @@ fn main() {
         .version(env!("CARGO_PKG_VERSION"))
         .author(env!("CARGO_PKG_AUTHORS"))
         .about("Convert excel to csv for git diffing")
-        .arg(Arg::with_name("INPUT")
-            .help("Select input file")
-            .required(true)
-            .index(1))
-        .arg(Arg::with_name("output")
-            .short("o")
-            .long("output")
-            .takes_value(true)
-            .help("Write output to file instead"))
+        .arg(
+            Arg::with_name("INPUT")
+                .help("Select input file")
+                .required(true)
+                .index(1),
+        )
+        .arg(
+            Arg::with_name("output")
+                .short("o")
+                .long("output")
+                .takes_value(true)
+                .help("Write output to file instead"),
+        )
         .get_matches();
 
     let input_file = matches.value_of("INPUT").unwrap();
@@ -48,6 +52,3 @@ fn main() {
         }
     }
 }
-
-
-
