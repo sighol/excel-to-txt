@@ -91,7 +91,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "excel-to-csv"
+name = "excel-to-txt"
 version = "0.1.0"
 dependencies = [
  "calamine 0.16.1 (registry+https://github.com/rust-lang/crates.io-index)",

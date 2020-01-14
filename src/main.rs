@@ -6,9 +6,9 @@ use std::fs::File;
 use std::io::Write;
 
 fn main() {
-    let matches = App::new("excel-to-csv")
-        .version("1.0.0")
-        .author("Sigurd Holsen")
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+        .version(env!("CARGO_PKG_VERSION"))
+        .author(env!("CARGO_PKG_AUTHORS"))
         .about("Convert excel to csv for git diffing")
         .arg(Arg::with_name("INPUT")
             .help("Select input file")
