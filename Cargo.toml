@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 calamine = "0.16.1"
-clap = "*"
+clap = "2.33.0"
