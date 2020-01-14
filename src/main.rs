@@ -36,10 +36,10 @@ fn main() {
     let mut excel: Xlsx<_> = open_workbook(input_file).unwrap();
     let sheet_names: Vec<_> = excel.sheet_names().into();
     for sheet_name in sheet_names {
-        writeln!(output, "\n\nSheet '{}'", sheet_name).expect("Failed to write to file");
+        writeln!(output, "\n\nSheet '{}'", sheet_name).expect("Failed to write");
         if let Some(Ok(r)) = excel.worksheet_range(&sheet_name) {
             for row in r.rows() {
-                writeln!(output, "{:?}", row).unwrap();
+                writeln!(output, "{:?}", row).expect("Failed to write");
             }
         }
     }
