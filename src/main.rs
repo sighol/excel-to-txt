@@ -3,7 +3,7 @@ use calamine::{open_workbook, Reader, Xlsx};
 use clap::{App, Arg};
 
 use std::fs::File;
-use std::io::Write;
+use std::io::{self, Write};
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -27,27 +27,19 @@ fn main() {
 
     let input_file = matches.value_of("INPUT").unwrap();
 
-    if let Some(output_file) = matches.value_of("output") {
-        let mut excel: Xlsx<_> = open_workbook(input_file).unwrap();
-        let sheet_names: Vec<_> = excel.sheet_names().into();
-        let mut file = File::create(output_file).expect("Failed to create file");
-        for sheet_name in sheet_names {
-            writeln!(file, "\n\nSheet '{}'", sheet_name).expect("Failed to write to file");
-            if let Some(Ok(r)) = excel.worksheet_range(&sheet_name) {
-                for row in r.rows() {
-                    writeln!(file, "{:?}", row).unwrap();
-                }
-            }
-        }
+    let mut output: Box<dyn Write> = if let Some(output_file) = matches.value_of("output") {
+        Box::new(File::create(output_file).expect("Failed to create output file"))
     } else {
-        let mut excel: Xlsx<_> = open_workbook(input_file).unwrap();
-        let sheet_names: Vec<_> = excel.sheet_names().into();
-        for sheet_name in sheet_names {
-            println!("\n\nSheet '{}'", sheet_name);
-            if let Some(Ok(r)) = excel.worksheet_range(&sheet_name) {
-                for row in r.rows() {
-                    println!("{:?}", row);
-                }
+        Box::new(io::stdout())
+    };
+
+    let mut excel: Xlsx<_> = open_workbook(input_file).unwrap();
+    let sheet_names: Vec<_> = excel.sheet_names().into();
+    for sheet_name in sheet_names {
+        writeln!(output, "\n\nSheet '{}'", sheet_name).expect("Failed to write to file");
+        if let Some(Ok(r)) = excel.worksheet_range(&sheet_name) {
+            for row in r.rows() {
+                writeln!(output, "{:?}", row).unwrap();
             }
         }
     }
